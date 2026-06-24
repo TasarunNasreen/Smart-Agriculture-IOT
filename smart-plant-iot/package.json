@@ -1,0 +1,7 @@
+{
+  "name": "smart-plant-iot",
+  "version": "1.0.0",
+  "description": "IoT smart plant watering system - ESP8266 + soil sensor + relay, with a black/green live dashboard deployed on Vercel.",
+  "license": "MIT",
+  "private": false
+}

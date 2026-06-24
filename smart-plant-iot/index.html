@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Plant IoT</title>
+<style>
+  :root{
+    --bg:#0a0d0a; --panel:#0e120e; --line:#1c2a1c;
+    --green:#39ff6a; --green-dim:#1f7a3d; --text:#cfe8d6; --muted:#5f7a68;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Courier New', monospace;
+    min-height:100vh; padding:24px; letter-spacing:.3px;
+  }
+  .wrap{max-width:1100px; margin:0 auto;}
+  header{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:24px; flex-wrap:wrap; gap:12px;
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .leaf{
+    width:40px; height:40px; border-radius:10px; background:rgba(57,255,106,.1);
+    display:flex; align-items:center; justify-content:center; font-size:20px;
+    border:1px solid var(--green-dim);
+  }
+  h1{font-size:18px; letter-spacing:3px; color:var(--green); text-transform:uppercase;}
+  .badge{
+    display:flex; align-items:center; gap:6px; font-size:11px; letter-spacing:2px;
+    text-transform:uppercase; border:1px solid var(--green-dim); border-radius:20px;
+    padding:6px 14px; color:var(--green);
+  }
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1} 50%{opacity:.3}}
+
+  .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:16px;}
+  @media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:480px){.grid{grid-template-columns:1fr;}}
+
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-top:2px solid var(--green);
+    border-radius:6px; padding:20px;
+  }
+  .label{font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:14px;}
+  .big{font-size:32px; color:var(--green); font-weight:bold;}
+  .unit{font-size:14px; color:var(--muted);}
+  .sub{font-size:11px; color:var(--muted); margin-top:6px;}
+
+  .gauge-wrap{display:flex; flex-direction:column; align-items:center;}
+  .gauge-num{font-size:30px; color:var(--green); font-weight:bold; margin-top:-58px;}
+  .gauge-label{font-size:10px; letter-spacing:2px; color:var(--muted); margin-top:2px; margin-bottom:14px;}
+  .pump-badge{
+    font-size:11px; letter-spacing:1.5px; padding:5px 12px; border-radius:14px;
+    border:1px solid var(--green-dim); display:flex; align-items:center; gap:6px;
+  }
+  .pump-badge.off{color:var(--muted); border-color:var(--line);}
+  .pump-badge.off .dot{background:var(--muted); box-shadow:none; animation:none;}
+  .pump-badge.on{color:var(--green);}
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-top:2px solid var(--green);
+    border-radius:6px; padding:20px; margin-bottom:16px;
+  }
+  .panel-title{
+    display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:2px;
+    color:var(--muted); text-transform:uppercase; margin-bottom:14px;
+  }
+  canvas{width:100%; height:220px; display:block;}
+
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{
+    text-align:left; font-size:10px; letter-spacing:2px; color:var(--muted);
+    text-transform:uppercase; padding:8px 6px; border-bottom:1px solid var(--line);
+  }
+  td{padding:9px 6px; border-bottom:1px solid var(--line); color:var(--text);}
+  td.moist{color:var(--green); font-weight:bold;}
+  .status{display:flex; align-items:center; gap:6px; color:var(--muted); font-size:12px;}
+  .status .dot{width:6px;height:6px;background:var(--muted); box-shadow:none; animation:none;}
+  .status.on .dot{background:var(--green); box-shadow:0 0 6px var(--green); animation:pulse 1.6s infinite;}
+  .status.on{color:var(--green);}
+
+  footer{
+    text-align:center; font-size:10px; letter-spacing:2px; color:var(--muted);
+    text-transform:uppercase; margin-top:28px; padding:18px 0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="leaf">🌱</div>
+      <h1>Smart Plant IoT</h1>
+    </div>
+    <div class="badge" id="modeBadge"><span class="dot"></span><span id="modeText">LIVE DEMO</span></div>
+  </header>
+
+  <div class="grid">
+    <div class="card gauge-wrap">
+      <div class="label" style="align-self:flex-start;">Soil Moisture Level</div>
+      <svg width="160" height="100" viewBox="0 0 160 100">
+        <path d="M20,90 A60,60 0 0,1 140,90" fill="none" stroke="#1c2a1c" stroke-width="12" stroke-linecap="round"/>
+        <path id="gaugeArc" d="M20,90 A60,60 0 0,1 140,90" fill="none" stroke="#39ff6a" stroke-width="12" stroke-linecap="round"/>
+      </svg>
+      <div class="gauge-num" id="moistNum">--</div>
+      <div class="gauge-label">MOISTURE</div>
+      <div class="pump-badge off" id="pumpBadge"><span class="dot"></span><span id="pumpText">PUMP OFF</span></div>
+    </div>
+
+    <div class="card">
+      <div class="label">Raw ADC Value</div>
+      <div class="big" id="rawVal">--<span class="unit">/1023</span></div>
+      <div class="sub">Capacitive sensor</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Device Uptime</div>
+      <div class="big" id="uptimeVal">--<span class="unit">s</span></div>
+      <div class="sub">Since reboot</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Last Update</div>
+      <div class="big" id="lastUpdate" style="font-size:22px;">--</div>
+      <div class="sub">Auto-refresh 10s</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">📈 Moisture History (Last 20 Readings)</div>
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">🚩 Recent Readings</div>
+    <table>
+      <thead>
+        <tr><th>Time</th><th>Moisture %</th><th>Raw ADC</th><th>Pump</th><th>Uptime</th></tr>
+      </thead>
+      <tbody id="readingsBody"></tbody>
+    </table>
+  </div>
+
+  <footer>Smart Plant IoT System · ESP8266 + Soil Sensor + Relay · Bhubaneswar, Odisha</footer>
+</div>
+
+<script>
+const API_BASE = ""; // same-origin Vercel API, e.g. "/api/data"
+let history = [];
+let usingLiveDevice = false;
+let simMoist = 69, simUptime = 6900;
+
+function fmtTime(d){ return d.toLocaleTimeString('en-US'); }
+
+function pushReading(r){
+  history.unshift(r);
+  if(history.length > 20) history.pop();
+}
+
+function render(){
+  const latest = history[0];
+  if(!latest) return;
+
+  document.getElementById('moistNum').textContent = latest.moisture;
+  document.getElementById('rawVal').innerHTML = latest.raw + '<span class="unit">/1023</span>';
+  document.getElementById('uptimeVal').innerHTML = latest.uptime + '<span class="unit">s</span>';
+  document.getElementById('lastUpdate').textContent = fmtTime(new Date(latest.time));
+
+  // gauge arc: 0-100% across 180deg semicircle, path length ~ 188.5
+  const pct = Math.max(0, Math.min(100, latest.moisture));
+  const arcLen = 188.5;
+  const dash = (pct/100) * arcLen;
+  const arc = document.getElementById('gaugeArc');
+  arc.setAttribute('stroke-dasharray', `${dash} ${arcLen}`);
+
+  const pumpBadge = document.getElementById('pumpBadge');
+  const pumpText = document.getElementById('pumpText');
+  if(latest.pump){
+    pumpBadge.className = 'pump-badge on';
+    pumpText.textContent = 'PUMP ACTIVE';
+  } else {
+    pumpBadge.className = 'pump-badge off';
+    pumpText.textContent = 'PUMP OFF';
+  }
+
+  document.getElementById('modeText').textContent = usingLiveDevice ? 'DEVICE CONNECTED' : 'LIVE DEMO';
+
+  // table
+  const body = document.getElementById('readingsBody');
+  body.innerHTML = history.map(r => `
+    <tr>
+      <td>${fmtTime(new Date(r.time))}</td>
+      <td class="moist">${r.moisture}%</td>
+      <td>${r.raw}</td>
+      <td><span class="status${r.pump?' on':''}"><span class="dot"></span>${r.pump?'ON':'OFF'}</span></td>
+      <td>${r.uptime}s</td>
+    </tr>`).join('');
+
+  drawChart();
+}
+
+function drawChart(){
+  const canvas = document.getElementById('chart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+
+  // grid
+  ctx.strokeStyle = '#1c2a1c'; ctx.lineWidth = 1; ctx.font = '10px monospace'; ctx.fillStyle = '#5f7a68';
+  [0,25,50,75,100].forEach(v=>{
+    const y = h - (v/100)*(h-20) - 10;
+    ctx.beginPath(); ctx.moveTo(30,y); ctx.lineTo(w,y); ctx.stroke();
+    ctx.fillText(v+'%', 0, y+3);
+  });
+
+  const data = [...history].reverse();
+  if(data.length < 2) return;
+  const stepX = (w-40)/(data.length-1);
+  ctx.beginPath();
+  ctx.strokeStyle = '#39ff6a'; ctx.lineWidth = 2;
+  data.forEach((r,i)=>{
+    const x = 35 + i*stepX;
+    const y = h - (r.moisture/100)*(h-20) - 10;
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  ctx.fillStyle = '#39ff6a';
+  data.forEach((r,i)=>{
+    const x = 35 + i*stepX;
+    const y = h - (r.moisture/100)*(h-20) - 10;
+    ctx.beginPath(); ctx.arc(x,y,2.5,0,7); ctx.fill();
+  });
+}
+
+function simulateReading(){
+  simMoist += (Math.random()-0.5)*6;
+  simMoist = Math.max(60, Math.min(75, simMoist));
+  const raw = Math.round(750 - simMoist*4.4 + (Math.random()-0.5)*10);
+  simUptime += 10;
+  pushReading({
+    time: Date.now(),
+    moisture: Math.round(simMoist),
+    raw: raw,
+    pump: simMoist < 65,
+    uptime: simUptime
+  });
+  render();
+}
+
+async function pollDevice(){
+  try{
+    const res = await fetch((API_BASE||'') + '/api/data', {cache:'no-store'});
+    if(!res.ok) throw new Error('no api');
+    const d = await res.json();
+    if(d && d.time && Date.now() - d.time < 30000){
+      usingLiveDevice = true;
+      pushReading(d);
+      render();
+      return;
+    }
+    throw new Error('stale');
+  }catch(e){
+    usingLiveDevice = false;
+    simulateReading();
+  }
+}
+
+// seed initial history so chart isn't empty
+for(let i=0;i<8;i++) simulateReading();
+pollDevice();
+setInterval(pollDevice, 10000);
+</script>
+</body>
+</html>
