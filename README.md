@@ -6,9 +6,11 @@ automatically (or manually) controls a water pump through a black/green live das
 Built as part of the **Industrial Internet of Things (IIoT)** coursework at
 **KIIT Deemed to be University** — Group-4 (Arghya Mitra, Biswajit Sahoo, Sonalika Das, Tasarun Nasreen).
 
-**[Live Demo →](https://your-project.vercel.app)** *(update after deploying)*
+**[Live Demo →](https://smart-agriculture-iot-pjk7.vercel.app/)**
 
-![Dashboard](docs/images/dashboard-live-demo.png)
+![Dashboard](<img width="1600" height="808" alt="WhatsApp Image 2026-06-25 at 00 19 33" src="https://github.com/user-attachments/assets/d21c22c0-2d81-4a38-875a-7358b9738969" />
+
+)
 
 ## How it works
 
@@ -30,8 +32,12 @@ without the hardware plugged in.
 
 | | |
 |---|---|
-| ![Top view](docs/images/prototype-top-view.png) | ![Wiring](docs/images/prototype-closeup.png) |
-| ![Full setup](docs/images/prototype-full-setup.png) | ![Readings table](docs/images/dashboard-readings-table.png) |
+| ![Top view](<img width="960" height="1280" alt="image" src="https://github.com/user-attachments/assets/1503f160-9f5e-4b2b-ad36-26fae8e0e6bc" />
+)
+ | ![Wiring](<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/41389a81-1e21-4a76-9270-4fa96a3f41e8" />
+ ) |
+| ![Full setup](<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/44faa858-90c7-4d8f-aa88-02831f173935" />
+)| 
 
 ## Hardware
 
@@ -57,20 +63,7 @@ smart-plant-iot/
 └── package.json
 ```
 
-## Deploy the dashboard (Vercel)
 
-1. Push this folder to a new GitHub repo.
-2. Go to [vercel.com/new](https://vercel.com/new) and import the repo.
-3. Leave all build settings as default (no build step needed) → **Deploy**.
-4. Vercel gives you a URL like `https://smart-plant-iot.vercel.app` — that's your live dashboard, working immediately in **Live Demo** mode.
-
-Or via CLI:
-
-```bash
-npm i -g vercel
-cd smart-plant-iot
-vercel --prod
-```
 
 ## Connect the real hardware
 
