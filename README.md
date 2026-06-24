@@ -6,7 +6,7 @@ automatically (or manually) controls a water pump through a black/green live das
 Built as part of the **Industrial Internet of Things (IIoT)** coursework at
 **KIIT Deemed to be University** — Group-4 (Arghya Mitra, Biswajit Sahoo, Sonalika Das, Tasarun Nasreen).
 
-**[Live Demo →](https://your-project.vercel.app)** *(update after deploying)*
+**[Live Demo →](https://smart-agriculture-iot-pjk7.vercel.app/)** 
 
 ![Dashboard](docs/images/dashboard-live-demo.png)
 
