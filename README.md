@@ -1,7 +1,7 @@
-# 🌱 Smart Plant IoT — Automated Irrigation System
+#  Smart Agriculture  IoT — Automated Irrigation System
 
 An IoT-based smart irrigation prototype that monitors soil moisture in real time and
-automatically (or manually) controls a water pump through a black/green live dashboard.
+automatically (or manually) controls a water pump through a live dashboard.
 
 Built as part of the **Industrial Internet of Things (IIoT)** coursework at
 **KIIT Deemed to be University** — Group-4 (Arghya Mitra, Biswajit Sahoo, Sonalika Das, Tasarun Nasreen).
